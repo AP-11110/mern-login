@@ -36,14 +36,14 @@ export const login = createAsyncThunk('auth/login', async (user, thunkAPI) => {
 // logout
 export const logout = createAsyncThunk('auth/logout', async () => {
     await authService.logout()
-})
+  })
 
 
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        reset: (state) => { // in order to reset values when done with login/register
+        reset: (state) => { // in order to reset values when done with login/register, user value persists
             state.isError = false
             state.isSuccess = false
             state.isLoading = false
@@ -67,9 +67,6 @@ export const authSlice = createSlice({
                 state.message = action.payload; // passed to thunkAPI.rejectWithValue(message)
                 state.user = null;
             })
-            .addCase(logout.fulfilled, (state) => {
-                state.user = null;
-            })
             // same as above register cases
             .addCase(login.pending, (state) => {
                 state.isLoading = true;
@@ -83,6 +80,9 @@ export const authSlice = createSlice({
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload; 
+                state.user = null;
+            })
+            .addCase(logout.fulfilled, (state) => {
                 state.user = null;
             })
     }
